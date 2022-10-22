@@ -126,6 +126,8 @@ app.on('window-all-closed', () => {
 
 const { dialog } = require('electron');
 const fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
+const yaml = require('js-yaml');
+
 app
   .whenReady()
   .then(() => {
@@ -137,22 +139,14 @@ app
     });
   })
   .then(() => {
-    fs.readFile(
-      path.resolve('/Users/dawidgaleziewski/.kube/config'),
-      'utf8',
-      (err, data) => {
-        if (!err) {
-          console.log('### error reading config', data);
-        }
-        console.log('####reading file', data, err);
-      }
-    );
+    try {
+      const kubeConfig = yaml.load(
+        fs.readFileSync('/Users/dawidgaleziewski/.kube/config', 'utf8')
+      );
+      console.log(kubeConfig);
+      mainWindow.webContents.send('kubeConfig', kubeConfig);
+    } catch (e) {
+      console.log(e);
+    }
   })
   .catch(console.log);
-
-// const { remote } = require('electron');
-//const fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
-
-// dialog.showOpenDialogSync(mainWindow, {
-//   properties: ['openFile', 'openDirectory'],
-// });

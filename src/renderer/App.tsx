@@ -1,3 +1,5 @@
+import React from 'react';
+import { ipcRenderer } from 'electron';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.css';
@@ -6,6 +8,13 @@ import './App.css';
 // const dialog = remote.require('dialog');
 
 const Start = () => {
+  React.useEffect(() => {
+    // ipcRenderer.addListener
+    // ipcRenderer.on('store-data', function (event, store) {
+    //   console.log(store);
+    // });
+  }, []);
+
   return (
     <div>
       <div className="Hello">
