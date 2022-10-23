@@ -3,6 +3,10 @@ import { Channels } from 'main/preload';
 declare global {
   interface Window {
     electron: {
+      store: {
+        get: (key: string) => any;
+        set: (key: string, val: any) => void;
+      };
       ipcRenderer: {
         sendMessage(channel: Channels, args: unknown[]): void;
         on(

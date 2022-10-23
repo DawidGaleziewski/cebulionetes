@@ -1,5 +1,4 @@
 import React from 'react';
-import { ipcRenderer } from 'electron';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.css';
@@ -9,10 +8,13 @@ import './App.css';
 
 const Start = () => {
   React.useEffect(() => {
-    // ipcRenderer.addListener
-    // ipcRenderer.on('store-data', function (event, store) {
-    //   console.log(store);
+    // window.electron.ipcRenderer.sendMessage('pass-k8-config', (args) => {
+    //   console.log(args);
     // });
+    // ipcRenderer.on('pass-k8-config', (event, args) => {
+    //   console.log(event);
+    // });
+    // console.log('#############store', window.electron.store.get('foo'));
   }, []);
 
   return (

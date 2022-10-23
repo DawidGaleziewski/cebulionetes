@@ -12,8 +12,13 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import Store from 'electron-store';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+
+const { dialog } = require('electron');
+const fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
+const yaml = require('js-yaml');
 
 class AppUpdater {
   constructor() {
@@ -29,6 +34,14 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+ipcMain.on('pass-k8-config', async (event, arg) => {
+  const kubeConfig = yaml.load(
+    fs.readFileSync('/Users/dawidgaleziewski/.kube/config', 'utf8')
+  );
+  event.reply('pass-k8-config', kubeConfig);
+  console.log(kubeConfig);
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -124,10 +137,6 @@ app.on('window-all-closed', () => {
   }
 });
 
-const { dialog } = require('electron');
-const fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
-const yaml = require('js-yaml');
-
 app
   .whenReady()
   .then(() => {
@@ -138,15 +147,42 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .then(() => {
-    try {
-      const kubeConfig = yaml.load(
-        fs.readFileSync('/Users/dawidgaleziewski/.kube/config', 'utf8')
-      );
-      console.log(kubeConfig);
-      mainWindow.webContents.send('kubeConfig', kubeConfig);
-    } catch (e) {
-      console.log(e);
-    }
-  })
+  // .then(() => {
+  //   try {
+  //     const kubeConfig = yaml.load(
+  //       fs.readFileSync('/Users/dawidgaleziewski/.kube/config', 'utf8')
+  //     );
+  //     console.log(kubeConfig);
+  //     mainWindow.webContents.send('kubeConfig', kubeConfig);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // })
   .catch(console.log);
+
+const store = new Store();
+
+// IPC listener
+// ipcMain.on('electron-store-get', async (event, val) => {
+//   event.returnValue = store.get(val);
+// });
+// ipcMain.on('electron-store-set', async (event, key, val) => {
+//   try {
+//     const kubeConfig = yaml.load(
+//       fs.readFileSync('/Users/dawidgaleziewski/.kube/config', 'utf8')
+//     );
+//     console.log(kubeConfig);
+//     // mainWindow.webContents.send('kubeConfig', kubeConfig);
+//     store.set('foo', kubeConfig);
+//   } catch (e) {
+//     console.log(e);
+//   }
+// });
+
+// IPC listener for setting up electron store
+ipcMain.on('electron-store-get', async (event, val) => {
+  event.returnValue = store.get(val);
+});
+ipcMain.on('electron-store-set', async (event, key, val) => {
+  store.set(key, val);
+});
