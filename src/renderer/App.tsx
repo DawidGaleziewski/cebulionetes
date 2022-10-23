@@ -32,6 +32,11 @@ const Start = () => {
       </div>
       <h1>Cebulionetes - free k8 gui</h1>
       <div className="Hello">Select k8 config</div>
+      {podsListing?.items
+        ? podsListing?.items.map((pod) => {
+            return <div>Name: {pod.metadata.name}, creation time stamp: </div>;
+          })
+        : null}
     </div>
   );
 };
