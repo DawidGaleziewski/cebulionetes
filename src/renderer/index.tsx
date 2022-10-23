@@ -13,8 +13,4 @@ window.electron.ipcRenderer.once('ipc-example', (arg) => {
 window.electron.ipcRenderer.sendMessage('ipc-example', ['ping']);
 
 // sync config data from files
-window.electron.ipcRenderer.once('pass-k8-config', (arg) => {
-  // eslint-disable-next-line no-console
-  console.log(arg);
-});
 window.electron.ipcRenderer.sendMessage('pass-k8-config', ['ping']);
