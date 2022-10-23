@@ -52,7 +52,7 @@ ipcMain.on('pass-k8-config', async (event, arg) => {
 
 ipcMain.on('kubectl-get-pods', async (event, arg) => {
   k8sApi
-    .listNamespacedPod('rp-new')
+    .listNamespacedPod('rp')
     .then((res: any) => {
       event.reply('kubectl-get-pods', res.body);
     })
@@ -167,37 +167,10 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  // .then(() => {
-  //   try {
-  //     const kubeConfig = yaml.load(
-  //       fs.readFileSync('/Users/dawidgaleziewski/.kube/config', 'utf8')
-  //     );
-  //     console.log(kubeConfig);
-  //     mainWindow.webContents.send('kubeConfig', kubeConfig);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // })
+
   .catch(console.log);
 
 const store = new Store();
-
-// IPC listener
-// ipcMain.on('electron-store-get', async (event, val) => {
-//   event.returnValue = store.get(val);
-// });
-// ipcMain.on('electron-store-set', async (event, key, val) => {
-//   try {
-//     const kubeConfig = yaml.load(
-//       fs.readFileSync('/Users/dawidgaleziewski/.kube/config', 'utf8')
-//     );
-//     console.log(kubeConfig);
-//     // mainWindow.webContents.send('kubeConfig', kubeConfig);
-//     store.set('foo', kubeConfig);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// });
 
 // IPC listener for setting up electron store
 ipcMain.on('electron-store-get', async (event, val) => {
