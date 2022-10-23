@@ -14,3 +14,4 @@ window.electron.ipcRenderer.sendMessage('ipc-example', ['ping']);
 
 // sync config data from files
 window.electron.ipcRenderer.sendMessage('pass-k8-config', ['ping']);
+window.electron.ipcRenderer.sendMessage('kubectl-get-pods', ['ping']);

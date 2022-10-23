@@ -19,6 +19,12 @@ import { resolveHtmlPath } from './util';
 const { dialog } = require('electron');
 const fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
 const yaml = require('js-yaml');
+const k8s = require('@kubernetes/client-node');
+
+const kc = new k8s.KubeConfig();
+kc.loadFromDefault();
+
+const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
 class AppUpdater {
   constructor() {
@@ -42,6 +48,15 @@ ipcMain.on('pass-k8-config', async (event, arg) => {
   );
   event.reply('pass-k8-config', kubeConfig);
   console.log(kubeConfig);
+});
+
+ipcMain.on('kubectl-get-pods', async (event, arg) => {
+  k8sApi.listNamespacedPod('rp-new').then((res) => {
+    event.reply('kubectl-get-pods', res.body);
+  });
+  // k8sApi.listNamespacedPod('default').then((res) => {
+  //   console.log(res.body);
+  // });
 });
 
 if (process.env.NODE_ENV === 'production') {

@@ -10,7 +10,7 @@ const useMainProcessStateOnMount = <IInitialType, IResponseType>(
 ) => {
   const [state, setState] = React.useState(initialState);
   React.useEffect(() => {
-    window.electron.ipcRenderer.once(channelName, (arg) => {
+    window.electron.ipcRenderer.on(channelName, (arg) => {
       setState(arg);
     });
   }, [setState, channelName]);
@@ -19,12 +19,12 @@ const useMainProcessStateOnMount = <IInitialType, IResponseType>(
 };
 
 const Start = () => {
-  const [kubeConfig, setCubeConfig] = useMainProcessStateOnMount(
-    'pass-k8-config',
-    null
-  );
+  const [kubeConfig] = useMainProcessStateOnMount('pass-k8-config', null);
+
+  const [podsListing] = useMainProcessStateOnMount('kubectl-get-pods', null);
 
   console.log('main cube config is ', kubeConfig);
+  console.log('podsListing:', podsListing);
   return (
     <div>
       <div className="Hello">
