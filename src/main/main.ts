@@ -51,9 +51,14 @@ ipcMain.on('pass-k8-config', async (event, arg) => {
 });
 
 ipcMain.on('kubectl-get-pods', async (event, arg) => {
-  k8sApi.listNamespacedPod('rp-new').then((res) => {
-    event.reply('kubectl-get-pods', res.body);
-  });
+  k8sApi
+    .listNamespacedPod('rp-new')
+    .then((res: any) => {
+      event.reply('kubectl-get-pods', res.body);
+    })
+    .catch((err: Error) => {
+      console.log('error fetching pods', err);
+    });
   // k8sApi.listNamespacedPod('default').then((res) => {
   //   console.log(res.body);
   // });

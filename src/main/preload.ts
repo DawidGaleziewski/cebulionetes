@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
-export type Channels = 'ipc-example' | 'pass-k8-config';
+export type Channels = 'ipc-example' | 'pass-k8-config' | 'kubectl-get-pods';
 
 contextBridge.exposeInMainWorld('electron', {
   store: {
